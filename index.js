@@ -222,6 +222,18 @@ function diacritic() {
   textarea.selectionEnd = previousContent.length;
 }
 
+const zasokeseMap = {
+  a: { Quote: "á", Backquote: "à", Semicolon: "ä", Comma: "â" },
+  c: { Comma: "ç" },
+  e: { Quote: "é", Backquote: "è", Semicolon: "ë", Comma: "ê" },
+  i: { Quote: "í", Backquote: "ì", Semicolon: "ï", Comma: "î" },
+  o: { Quote: "ó", Backquote: "ò", Semicolon: "ö", Comma: "ô", Slash: "ø" },
+  u: { Quote: "ú", Backquote: "ù", Semicolon: "ü", Comma: "û" },
+  y: { Quote: "ý", Backquote: "ỳ", Semicolon: "ÿ", Comma: "ŷ" },
+  "<": { Comma: "«" },
+  ">": { Period: "»" }
+};
+
 function onload() {
   // --- color scheme things
   updateIsDarkMode();
@@ -400,6 +412,34 @@ function onload() {
       emojiCommand();
 
       return;
+    }
+
+    // zasokese diacritic
+    const previousContent = e.target.value.substring(0, e.target.selectionStart);
+    let newPrevious;
+    Object.entries(zasokeseMap).forEach(([letter, map]) => {
+      if (newPrevious !== undefined) {
+        return;
+      }
+
+      if (!previousContent.endsWith(letter) && !previousContent.endsWith(letter.toUpperCase())) {
+        return;
+      }
+
+      if (Object.keys(map).indexOf(e.code) === -1) {
+        return;
+      }
+
+      const isUpperCase = !previousContent.endsWith(letter);
+      newPrevious =
+        previousContent.substring(0, previousContent.length - 1) +
+        (isUpperCase ? map[e.code].toUpperCase() : map[e.code]);
+    });
+
+    if (newPrevious !== undefined) {
+      e.preventDefault();
+      e.target.value = newPrevious + e.target.value.substring(e.target.selectionStart)
+      e.target.selectionStart = newPrevious.length;
     }
   });
 

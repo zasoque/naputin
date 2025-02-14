@@ -444,6 +444,7 @@ function onload() {
       e.preventDefault();
       e.target.value = newPrevious + e.target.value.substring(e.target.selectionStart)
       e.target.selectionStart = newPrevious.length;
+      e.target.selectionEnd = newPrevious.length;
     }
   });
 

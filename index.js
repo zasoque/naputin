@@ -418,6 +418,10 @@ function onload() {
     const previousContent = e.target.value.substring(0, e.target.selectionStart);
     let newPrevious;
     Object.entries(zasokeseMap).forEach(([letter, map]) => {
+      if (!e.ctrlKey) {
+        return;
+      }
+
       if (newPrevious !== undefined) {
         return;
       }
